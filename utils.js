@@ -27,7 +27,7 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, 
       message += `\`${status}\`\n`;
       issues.forEach((issue) => {
         let remainingDays = getRemainingDays(issue);
-        message += `[${issue.fields.summary}](https://${jiraHost}/browse/${issue.key}) - \`${remainingDays}\` days left\n`
+        message += `<https://${jiraHost}/browse/${issue.key}|${issue.fields.summary}> - \`${remainingDays}\` days left\n`
       });
     }
   }
@@ -62,7 +62,7 @@ function getRemainingDays(issue) {
  * @return {object} Response object from Jira API
  */
 function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, channel) {
-  let message = '';
+  let blocks = [];
 
   const daysInSprint = 10;
   const daysPassed = 9;
@@ -90,22 +90,22 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
       totalDaysLeft += getRemainingDays(issue);
     }
 
-    message += formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed);
+    blocks.push(
+        {
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed),
+				"emoji": true
+			},
+		},
+    );
   }
 
   return {
     channel: channel,
     username: 'Jira board summarize',
-    blocks: [
-        {
-			"type": "section",
-			"text": {
-				"type": "plain_text",
-				"text": message,
-				"emoji": true
-			}
-		}
-    ],
+    blocks: blocks,
   };
 }
 
