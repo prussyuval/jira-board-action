@@ -1,0 +1,188 @@
+# Created by .ignore support plugin (hsz.mobi)
+### VirtualEnv template
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+.Python
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+pyvenv.cfg
+.venv
+pip-selfcheck.json
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+.cache
+.mypy_cache/
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython Notebook
+.ipynb_checkpoints/
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+variables.env
+
+# virtualenv
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+
+# Rope project settings
+.ropeproject
+
+# SQLite
+db/*.db
+
+#CSV
+.csv
+
+# pytest
+pytest.ini
+.testmondata
+
+# Packages #
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.db
+
+# Images
+*.jpeg
+*.jpg
+*.png
+*.gif
+
+# Research
+*.csv
+*.log
+*.parquet
+.env
+.envrc
+
+
+.idea/
+.vscode/
+builds/
+cache/
+environment/images/postgres/migrations/
+environment/images/postgres-integration/migrations/
+
+metastore_db/
+cached_access_token.json
+src/mypy.ini
+
+.pg_data
+!src/tests/resources/passenger_names.txt
+
+.variables
+
+src/research/src/cross_market_pilot/analysis_pnrs_df
+src/research/src/cross_market_pilot/analysis_pop
+src/research/src/cross_market_pilot/valid_pnrs
+src/research/src/cross_market_pilot/valid_pnrs_pop
+.DS_Store
+
+src/tests/research/models/optimax/model/*
+src/tests/research/models/optimax/validation_files/*.json
+src/tests/research/models/optimax/validation_files/*.csv
+src/research/notebooks/optifare_model/model_training_pipeline_cache/*
+src/research/notebooks/sent_to_support_model/EDA/catboost_info/*
+
+# JS
+node_modules
+
+# DBT
+dbt/**/target/
+dbt/**/dbt_packages/
+dbt/**/logs/*
+dbt/edr_target/
+
+# Terraform
+.terraform
+
+# Terragrunt
+.terragrunt-cache
+*.terragrunt-debug.tfvars.json
+terragrunt_rendered.json
+plan_ouput.md
