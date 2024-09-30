@@ -27,7 +27,7 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, 
       message += `\`${status}\`\n`;
       issues.forEach((issue) => {
         let remainingDays = getRemainingDays(issue);
-        message += `https://${jiraHost}/browse/${issue.key} - ${issue.fields.summary} (\`${remainingDays}\` days left) \n`
+        message += `[${issue.fields.summary}](https://${jiraHost}/browse/${issue.key}) - \`${remainingDays}\` days left\n`
       });
     }
   }
