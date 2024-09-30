@@ -66,11 +66,10 @@ function getCurrentDate() {
  * Create a pretty message to print
  * @param {String} jiraHost Jira hostname
  * @param {Object} issuesByAssignee Array of issues
- * @param {Object} jiraToGithubMapping Object with the mapping between Jira and GitHub users
  * @param {String} channel Channel to send the message
  * @return {object} Response object from Jira API
  */
-function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, channel) {
+function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
   let blocks = [
       {
 			"type": "header",

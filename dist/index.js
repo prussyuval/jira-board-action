@@ -6248,11 +6248,10 @@ function getCurrentDate() {
  * Create a pretty message to print
  * @param {String} jiraHost Jira hostname
  * @param {Object} issuesByAssignee Array of issues
- * @param {Object} jiraToGithubMapping Object with the mapping between Jira and GitHub users
  * @param {String} channel Channel to send the message
  * @return {object} Response object from Jira API
  */
-function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, channel) {
+function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
   let blocks = [
       {
 			"type": "header",
@@ -10803,7 +10802,6 @@ async function main() {
   try {
     const webhookUrl = core.getInput('webhook-url');
     const channel = core.getInput('channel');
-    const jiraToGithubMapping = core.getInput('jira-github-map');
     const jiraUsername = core.getInput('jira-username');
     const jiraPassword = core.getInput('jira-password');
     const jiraHost = core.getInput('jira-host');
@@ -10830,15 +10828,8 @@ async function main() {
       }
     }
 
-    const usersMap = stringToObject(jiraToGithubMapping);
-
-    core.info('Users map:');
-    for (const [github, provider] of Object.entries(usersMap)) {
-      core.info(`${github} => ${provider}`);
-    }
-
     const message = formatSlackMessage(
-        jiraHost, issuesByAssignee, usersMap, channel
+        jiraHost, issuesByAssignee, channel
     );
     const response = await sendNotification(webhookUrl, message);
     core.info(`Request message: ${JSON.stringify(message)}`);

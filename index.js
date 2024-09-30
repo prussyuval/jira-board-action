@@ -17,7 +17,6 @@ async function main() {
   try {
     const webhookUrl = core.getInput('webhook-url');
     const channel = core.getInput('channel');
-    const jiraToGithubMapping = core.getInput('jira-github-map');
     const jiraUsername = core.getInput('jira-username');
     const jiraPassword = core.getInput('jira-password');
     const jiraHost = core.getInput('jira-host');
@@ -44,15 +43,8 @@ async function main() {
       }
     }
 
-    const usersMap = stringToObject(jiraToGithubMapping);
-
-    core.info('Users map:');
-    for (const [github, provider] of Object.entries(usersMap)) {
-      core.info(`${github} => ${provider}`);
-    }
-
     const message = formatSlackMessage(
-        jiraHost, issuesByAssignee, usersMap, channel
+        jiraHost, issuesByAssignee, channel
     );
     const response = await sendNotification(webhookUrl, message);
     core.info(`Request message: ${JSON.stringify(message)}`);
