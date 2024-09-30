@@ -6184,6 +6184,18 @@ const axios = __nccwpck_require__(8757);
 
 const STATUS_SORTING = ['Design', 'In Progress', 'Review'];
 
+function getColors(daysGap) {
+  if (daysGap <= 0) {
+      return ":green_circle:";
+  }
+
+  if (daysGap === 1) {
+    return ":yellow_circle:";
+  }
+
+  return ":red_circle:";
+}
+
 function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed) {
   let message = `*${assigneeDisplayName}*\n`;
 
@@ -6198,7 +6210,7 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, 
     }
   }
 
-  message += `*Total days left: ${totalDaysLeft}*\n\n`;
+  message += `*${getColors(totalDaysLeft)} Total days left: ${totalDaysLeft}*\n\n`;
   return message;
 }
 
