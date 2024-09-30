@@ -62,7 +62,16 @@ function getRemainingDays(issue) {
  * @return {object} Response object from Jira API
  */
 function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, channel) {
-  let blocks = [];
+  let blocks = [
+      {
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Board Summary",
+				"emoji": true
+			}
+		}
+  ];
 
   const daysInSprint = 10;
   const daysPassed = 9;
@@ -99,6 +108,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
 			},
 		},
     );
+    blocks.push({type: 'divider'});
   }
 
   return {
