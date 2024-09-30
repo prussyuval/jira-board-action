@@ -53,6 +53,15 @@ function getRemainingDays(issue) {
   return timeTrackingDays.remainingEstimateSeconds / 3600 / 8;
 }
 
+function getCurrentDate() {
+  let today = new Date();
+  let dd = String(today.getDate()).padStart(2, '0');
+  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  let yyyy = today.getFullYear();
+
+  return dd + '/' + mm + '/' + yyyy;
+}
+
 /**
  * Create a pretty message to print
  * @param {String} jiraHost Jira hostname
@@ -67,7 +76,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
 			"type": "header",
 			"text": {
 				"type": "plain_text",
-				"text": "Board Summary",
+				"text": `Board Summary - ${getCurrentDate()}`,
 				"emoji": true
 			}
 		}
