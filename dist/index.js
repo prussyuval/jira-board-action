@@ -6186,11 +6186,15 @@ const STATUS_SORTING = ['Design', 'In Progress', 'Review'];
 
 function getColors(daysGap) {
   if (daysGap <= 0) {
-      return ":green_circle:";
+      return ":large_green_circle:";
   }
 
   if (daysGap === 1) {
-    return ":yellow_circle:";
+    return ":large_yellow_circle:";
+  }
+
+  if (daysGap === 2) {
+    return ":large_orange_circle:";
   }
 
   return ":red_circle:";
