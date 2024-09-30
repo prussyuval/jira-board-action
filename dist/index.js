@@ -6182,14 +6182,20 @@ exports.debug = debug; // for test
 
 const axios = __nccwpck_require__(8757);
 
+const STATUS_SORTING = ['Design', 'In Progress', 'Review'];
+
 function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed) {
   let message = `*${assigneeDisplayName}*\n`;
-  for (const [status, issues] of Object.entries(statusMap)) {
-    message += `\`${status}\`\n`;
-    issues.forEach((issue) => {
-      let remainingDays = getRemainingDays(issue);
-      message += `https://${jiraHost}/browse/${issue.key} - ${issue.fields.summary} (\`${remainingDays}\` days left) \n`
-    });
+
+  for (const status of STATUS_SORTING) {
+    let issues = statusMap[status];
+    if (issues) {
+      message += `\`${status}\`\n`;
+      issues.forEach((issue) => {
+        let remainingDays = getRemainingDays(issue);
+        message += `https://${jiraHost}/browse/${issue.key} - ${issue.fields.summary} (\`${remainingDays}\` days left) \n`
+      });
+    }
   }
 
   message += `*Total days left: ${totalDaysLeft}*\n\n`;
