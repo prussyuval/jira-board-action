@@ -6182,13 +6182,13 @@ exports.debug = debug; // for test
 
 const axios = __nccwpck_require__(8757);
 
-function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, daysInSprint, daysPassed) {
+function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed) {
   let message = `*${assigneeDisplayName}*\n`;
   for (const [status, issues] of Object.entries(statusMap)) {
-    message += `\`${status}\`:\n`;
+    message += `\`${status}\`\n`;
     issues.forEach((issue) => {
       let remainingDays = getRemainingDays(issue);
-      message += `${issue.key} - ${issue.fields.summary} (${remainingDays} days left) \n`
+      message += `https://${jiraHost}/browse/${issue.key} - ${issue.fields.summary} (\`${remainingDays}\` days left) \n`
     });
   }
 
@@ -6245,7 +6245,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
       totalDaysLeft += getRemainingDays(issue);
     }
 
-    message += formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, daysInSprint, daysPassed);
+    message += formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed);
   }
 
   return {
