@@ -10765,7 +10765,7 @@ async function main() {
       }
     }
 
-    core.info(issuesByAssignee);
+    core.info(JSON.stringify(issuesByAssignee));
 
     if (issuesByAssignee.length) {
       const usersMap = stringToObject(jiraToGithubMapping);
