@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const STATUS_SORTING = ['Design', 'In Progress', 'Review'];
+const STATUS_SORTING = ['design', 'pipeline', 'in progress', 'review'];
 
 function getColors(daysGap) {
   if (daysGap <= 0) {
@@ -82,7 +82,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
         continue;
       }
 
-      let status = issueFields.status.name;
+      let status = issueFields.status.name.toLowerCase();
       if (!statusMap[status]) {
         statusMap[status] = [];
       }
