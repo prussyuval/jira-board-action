@@ -10750,6 +10750,8 @@ async function main() {
     const jiraResponse = await getJiraIssues(jiraUsername, jiraPassword, jiraHost, jiraBoardId, jiraCustomFilter);
     const issues = jiraResponse.data.issues;
 
+    console.log(issues.length);
+
     let issuesByAssignee = {};
     for (const issue of issues) {
       const issueFields = issue.fields;
