@@ -6278,7 +6278,16 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
   return {
     channel: channel,
     username: 'Jira board summarize',
-    text: message,
+    blocks: [
+        {
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": message,
+				"emoji": true
+			}
+		}
+    ],
   };
 }
 
