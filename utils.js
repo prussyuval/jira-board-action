@@ -3,13 +3,13 @@ const axios = require('axios');
 function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, daysInSprint, daysPassed) {
   let message = `*${assigneeDisplayName}*\n`;
   for (const [status, issues] of Object.entries(statusMap)) {
-    message += `${status}:\n`;
+    message += `\`${status}\`:\n`;
     issues.forEach((issue) => {
       message += ` - ${issue.key} - ${issue.fields.summary}\n`
     });
   }
 
-  message += `Total days left: ${totalDaysLeft}\n\n`;
+  message += `*Total days left: ${totalDaysLeft}*\n\n`;
   return message;
 }
 

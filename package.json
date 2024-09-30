@@ -1,7 +1,7 @@
 {
   "name": "jira-reminder-action",
   "version": "2.7.0",
-  "description": "Reminder for Jira issues",
+  "description": "Summarize for Jira Board",
   "scripts": {
     "build": "ncc build index.js",
     "lint": "eslint ./",
