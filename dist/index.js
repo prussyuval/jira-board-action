@@ -6184,23 +6184,23 @@ const axios = __nccwpck_require__(8757);
 
 const STATUS_SORTING = ['design', 'pipeline', 'in progress', 'review'];
 
-function getColors(daysGap) {
-  if (daysGap <= 0) {
+function getColors(totalDaysInProgress, totalDaysInReview, daysLeftInSprint) {
+  if ((totalDaysInProgress + totalDaysInReview) <= daysLeftInSprint) {
       return ":large_green_circle:";
   }
 
-  if (daysGap === 1) {
+  if ((totalDaysInProgress + (totalDaysInReview / 2)) <= daysLeftInSprint) {
     return ":large_yellow_circle:";
   }
 
-  if (daysGap === 2) {
+  if (totalDaysInProgress <= daysLeftInSprint) {
     return ":large_orange_circle:";
   }
 
   return ":red_circle:";
 }
 
-function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed) {
+function formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, daysInSprint, daysPassed) {
   let message = `*${assigneeDisplayName}*\n`;
 
   for (const status of STATUS_SORTING) {
@@ -6214,7 +6214,7 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, 
     }
   }
 
-  message += `*${getColors(totalDaysLeft - (daysInSprint - daysPassed))} Total days left: ${totalDaysLeft}*\n\n`;
+  message += `*${getColors(totalDaysInProgress, totalDaysInReview, daysInSprint - daysPassed)} Total days left: ${totalDaysInProgress + totalDaysInReview}*\n\n`;
   return message;
 }
 
@@ -6268,7 +6268,9 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
   const daysPassed = 9;
 
   for (let [assignee, issues] of Object.entries(issuesByAssignee)) {
-    let totalDaysLeft = 0;
+    let totalDaysInProgress = 0;
+    let totalDaysInReview = 0;
+
     let assigneeDisplayName = issues[0].fields.assignee.displayName;
 
     let statusMap = {};
@@ -6287,7 +6289,13 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
         statusMap[status] = [];
       }
       statusMap[status].push(issue);
-      totalDaysLeft += getRemainingDays(issue);
+
+      let remainingDays = getRemainingDays(issue);
+      if (status === 'review') {
+        totalDaysInReview += remainingDays;
+      } else {
+        totalDaysInProgress += remainingDays;
+      }
     }
 
     blocks.push(
@@ -6295,7 +6303,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed),
+				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, daysInSprint, daysPassed),
 			},
 		},
     );
