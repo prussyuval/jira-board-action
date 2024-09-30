@@ -10763,6 +10763,8 @@ async function main() {
       }
     }
 
+    core.info(issuesByAssignee);
+
     if (issuesByAssignee.length) {
       const usersMap = stringToObject(jiraToGithubMapping);
 
@@ -10779,6 +10781,9 @@ async function main() {
       core.info(`Response status: ${response.status}`);
       core.info(`Response data: ${JSON.stringify(response.data)}`);
       core.info(`Notification was sent successfully!`);
+    }
+    else {
+        core.info('No issues to notify about');
     }
   } catch (error) {
     core.setFailed(error.message);
