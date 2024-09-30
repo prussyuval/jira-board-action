@@ -6210,7 +6210,7 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, 
     }
   }
 
-  message += `*${getColors(totalDaysLeft)} Total days left: ${totalDaysLeft}*\n\n`;
+  message += `*${getColors(totalDaysLeft - (daysInSprint - daysPassed))} Total days left: ${totalDaysLeft}*\n\n`;
   return message;
 }
 
@@ -6238,7 +6238,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
   let message = '';
 
   const daysInSprint = 10;
-  const daysPassed = 3;
+  const daysPassed = 9;
 
   for (let [assignee, issues] of Object.entries(issuesByAssignee)) {
     let totalDaysLeft = 0;
