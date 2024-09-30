@@ -5,12 +5,25 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, daysInSpri
   for (const [status, issues] of Object.entries(statusMap)) {
     message += `\`${status}\`:\n`;
     issues.forEach((issue) => {
-      message += ` - ${issue.key} - ${issue.fields.summary}\n`
+      let remainingDays = getRemainingDays(issue);
+      message += `${issue.key} - ${issue.fields.summary} (${remainingDays} days left) \n`
     });
   }
 
   message += `*Total days left: ${totalDaysLeft}*\n\n`;
   return message;
+}
+
+function getRemainingDays(issue) {
+  let issueFields = issue.fields;
+  let timeTrackingDays = issueFields.timetracking;
+
+  let estimationDays = timeTrackingDays.originalEstimateSeconds / 3600 / 8;
+
+  if (timeTrackingDays.remainingEstimateSeconds === undefined) {
+    return estimationDays;
+  }
+  return timeTrackingDays.remainingEstimateSeconds / 3600 / 8;
 }
 
 /**
@@ -47,17 +60,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
         statusMap[status] = [];
       }
       statusMap[status].push(issue);
-
-      let estimationDays = timeTrackingDays.originalEstimateSeconds / 3600 / 8;
-
-      let remainingDays;
-      if (timeTrackingDays.remainingEstimateSeconds === undefined) {
-        remainingDays = estimationDays;
-      } else {
-        remainingDays = timeTrackingDays.remainingEstimateSeconds / 3600 / 8;
-      }
-
-      totalDaysLeft += remainingDays;
+      totalDaysLeft += getRemainingDays(issue);
     }
 
     message += formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, daysInSprint, daysPassed);
