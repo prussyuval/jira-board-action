@@ -38,6 +38,11 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, 
 
 function getRemainingDays(issue) {
   let issueFields = issue.fields;
+
+  if (issueFields.aggregatetimeoriginalestimate !== null) {
+     return issueFields.aggregatetimeoriginalestimate / 3600 / 8;
+  }
+
   let timeTrackingDays = issueFields.timetracking;
 
   let estimationDays = timeTrackingDays.originalEstimateSeconds / 3600 / 8;
