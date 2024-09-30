@@ -6309,6 +6309,8 @@ function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
     blocks.push({type: 'divider'});
   }
 
+  blocks.pop();
+
   return {
     channel: channel,
     username: 'Jira board summarize',
