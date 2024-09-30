@@ -6278,7 +6278,6 @@ function formatSlackMessage(jiraHost, issuesByAssignee, jiraToGithubMapping, cha
 			"text": {
 				"type": "mrkdwn",
 				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysLeft, jiraHost, daysInSprint, daysPassed),
-				"emoji": true
 			},
 		},
     );
