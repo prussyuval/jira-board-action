@@ -28,6 +28,13 @@ async function main() {
     const jiraResponse = await getJiraIssues(jiraUsername, jiraPassword, jiraHost, jiraBoardId, jiraCustomFilter);
     const issues = jiraResponse.data.issues;
 
+    // Get active sprint
+    core.info('Getting active sprint...');
+    const activeSprintResponse = await getActiveSprint
+    const activeSprint = activeSprintResponse.data.values[0];
+    const sprintStartDate = new Date(activeSprint.startDate);
+    const sprintEndDate = new Date(activeSprint.endDate);
+
     console.log(issues.length);
 
     let issuesByAssignee = {};
@@ -44,7 +51,7 @@ async function main() {
     }
 
     const message = formatSlackMessage(
-        jiraHost, issuesByAssignee, channel
+        jiraHost, issuesByAssignee, channel, sprintStartDate, sprintEndDate
     );
     const response = await sendNotification(webhookUrl, message);
     core.info(`Request message: ${JSON.stringify(message)}`);

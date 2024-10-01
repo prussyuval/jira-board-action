@@ -67,9 +67,11 @@ function getCurrentDate() {
  * @param {String} jiraHost Jira hostname
  * @param {Object} issuesByAssignee Array of issues
  * @param {String} channel Channel to send the message
+ * @param {Date} sprintStartDate Sprint start date
+ * @param {Date} sprintEndDate Sprint end date
  * @return {object} Response object from Jira API
  */
-function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
+function formatSlackMessage(jiraHost, issuesByAssignee, channel, sprintStartDate, sprintEndDate) {
   let blocks = [
       {
 			"type": "header",
@@ -81,8 +83,11 @@ function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
 		}
   ];
 
-  const daysInSprint = 10;
-  const daysPassed = 9;
+
+  const daysInSprint = Math.round((sprintEndDate - sprintStartDate) / (1000 * 60 * 60 * 24));
+  const workDaysInSprint = daysInSprint - (daysInSprint * 2 / 7);
+  let daysRemaining = Math.ceil((sprintEndDate - new Date()) / (1000 * 60 * 60 * 24));
+  daysRemaining = daysRemaining - (Math.floor(daysRemaining / 7) * 2);
 
   for (let [assignee, issues] of Object.entries(issuesByAssignee)) {
     let totalDaysInProgress = 0;
@@ -120,7 +125,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, daysInSprint, daysPassed),
+				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, workDaysInSprint, daysRemaining),
 			},
 		},
     );

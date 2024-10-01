@@ -6,6 +6,33 @@
 
 const axios = __nccwpck_require__(8757);
 
+
+/**
+ * Get active sprint using Jira API
+ * @param {String} jiraUsername Jira username
+ * @param {String} jiraPassword Jira API Key
+ * @param {String} jiraHost Jira hostname
+ * @param {String} jiraBoardId Jira board ID
+ * @return {object} Response object from Jira API
+ */
+async function getActiveSprint(jiraUsername, jiraPassword, jiraHost, jiraBoardId) {
+    let url = `https://${jiraHost}/rest/agile/1.0/board/${jiraBoardId}/sprint?state=active`;
+    const authorization = Buffer.from(`${jiraUsername}:${jiraPassword}`).toString('base64');
+    const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Basic ${authorization}`,
+    }
+
+    try {
+        return await axios({method: 'GET', url: url, headers: headers});
+    } catch (error) {
+        console.error(`Failed to get active sprint: ${error}`);
+        console.error(error.response.data);
+        throw new Error(error);
+    }
+}
+
 /**
  * Get Jira issues using Jira API
  * @param {String} username Jira username
@@ -26,9 +53,6 @@ async function getJiraIssues(username, password, jiraHost, jiraBoardId, jiraCust
     'Accept': 'application/json',
     'Authorization': `Basic ${authorization}`,
   }
-
-  // console.log(`Jira API URL: ${url}`);
-  // console.log(`Headers: ${JSON.stringify(headers)}`);
 
   try {
     return await axios({method: 'GET', url: url, headers: headers});
@@ -6249,9 +6273,11 @@ function getCurrentDate() {
  * @param {String} jiraHost Jira hostname
  * @param {Object} issuesByAssignee Array of issues
  * @param {String} channel Channel to send the message
+ * @param {Date} sprintStartDate Sprint start date
+ * @param {Date} sprintEndDate Sprint end date
  * @return {object} Response object from Jira API
  */
-function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
+function formatSlackMessage(jiraHost, issuesByAssignee, channel, sprintStartDate, sprintEndDate) {
   let blocks = [
       {
 			"type": "header",
@@ -6263,8 +6289,11 @@ function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
 		}
   ];
 
-  const daysInSprint = 10;
-  const daysPassed = 9;
+
+  const daysInSprint = Math.round((sprintEndDate - sprintStartDate) / (1000 * 60 * 60 * 24));
+  const workDaysInSprint = daysInSprint - (daysInSprint * 2 / 7);
+  let daysRemaining = Math.ceil((sprintEndDate - new Date()) / (1000 * 60 * 60 * 24));
+  daysRemaining = daysRemaining - (Math.floor(daysRemaining / 7) * 2);
 
   for (let [assignee, issues] of Object.entries(issuesByAssignee)) {
     let totalDaysInProgress = 0;
@@ -6302,7 +6331,7 @@ function formatSlackMessage(jiraHost, issuesByAssignee, channel) {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, daysInSprint, daysPassed),
+				"text": formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, workDaysInSprint, daysRemaining),
 			},
 		},
     );
@@ -10815,6 +10844,13 @@ async function main() {
     const jiraResponse = await getJiraIssues(jiraUsername, jiraPassword, jiraHost, jiraBoardId, jiraCustomFilter);
     const issues = jiraResponse.data.issues;
 
+    // Get active sprint
+    core.info('Getting active sprint...');
+    const activeSprintResponse = await getActiveSprint
+    const activeSprint = activeSprintResponse.data.values[0];
+    const sprintStartDate = new Date(activeSprint.startDate);
+    const sprintEndDate = new Date(activeSprint.endDate);
+
     console.log(issues.length);
 
     let issuesByAssignee = {};
@@ -10831,7 +10867,7 @@ async function main() {
     }
 
     const message = formatSlackMessage(
-        jiraHost, issuesByAssignee, channel
+        jiraHost, issuesByAssignee, channel, sprintStartDate, sprintEndDate
     );
     const response = await sendNotification(webhookUrl, message);
     core.info(`Request message: ${JSON.stringify(message)}`);
