@@ -65,6 +65,7 @@ async function getJiraIssues(username, password, jiraHost, jiraBoardId, jiraCust
 
 module.exports = {
   getJiraIssues,
+  getActiveSprint,
 };
 
 
@@ -10818,6 +10819,7 @@ const core = __nccwpck_require__(2186);
 
 const {
   getJiraIssues,
+  getActiveSprint,
 } = __nccwpck_require__(5237);
 const {
   formatSlackMessage,
@@ -10846,7 +10848,7 @@ async function main() {
 
     // Get active sprint
     core.info('Getting active sprint...');
-    const activeSprintResponse = await getActiveSprint
+    const activeSprintResponse = await getActiveSprint(jiraUsername, jiraPassword, jiraHost, jiraBoardId);
     const activeSprint = activeSprintResponse.data.values[0];
     const sprintStartDate = new Date(activeSprint.startDate);
     const sprintEndDate = new Date(activeSprint.endDate);

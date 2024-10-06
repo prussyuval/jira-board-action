@@ -59,4 +59,5 @@ async function getJiraIssues(username, password, jiraHost, jiraBoardId, jiraCust
 
 module.exports = {
   getJiraIssues,
+  getActiveSprint,
 };

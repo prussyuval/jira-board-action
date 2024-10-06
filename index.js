@@ -2,6 +2,7 @@ const core = require('@actions/core');
 
 const {
   getJiraIssues,
+  getActiveSprint,
 } = require('./jira');
 const {
   formatSlackMessage,
@@ -30,7 +31,7 @@ async function main() {
 
     // Get active sprint
     core.info('Getting active sprint...');
-    const activeSprintResponse = await getActiveSprint
+    const activeSprintResponse = await getActiveSprint(jiraUsername, jiraPassword, jiraHost, jiraBoardId);
     const activeSprint = activeSprintResponse.data.values[0];
     const sprintStartDate = new Date(activeSprint.startDate);
     const sprintEndDate = new Date(activeSprint.endDate);
