@@ -6225,7 +6225,7 @@ function getColors(totalDaysInProgress, totalDaysInReview, daysLeftInSprint) {
   return ":red_circle:";
 }
 
-function formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, daysInSprint, daysPassed) {
+function formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, totalDaysInReview, jiraHost, daysInSprint, daysRemaining) {
   let message = `*${assigneeDisplayName}*\n`;
 
   for (const status of STATUS_SORTING) {
@@ -6239,7 +6239,7 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, tota
     }
   }
 
-  message += `*${getColors(totalDaysInProgress, totalDaysInReview, daysInSprint - daysPassed)} Total days left: ${totalDaysInProgress + totalDaysInReview}*\n\n`;
+  message += `*${getColors(totalDaysInProgress, totalDaysInReview, daysRemaining)} Total days left: ${totalDaysInProgress + totalDaysInReview}/${daysRemaining}*\n\n`;
   return message;
 }
 
@@ -6293,8 +6293,9 @@ function formatSlackMessage(jiraHost, issuesByAssignee, channel, sprintStartDate
 
   const daysInSprint = Math.round((sprintEndDate - sprintStartDate) / (1000 * 60 * 60 * 24));
   const workDaysInSprint = daysInSprint - (daysInSprint * 2 / 7);
-  let daysRemaining = Math.ceil((sprintEndDate - new Date()) / (1000 * 60 * 60 * 24));
-  daysRemaining = daysRemaining - (Math.floor(daysRemaining / 7) * 2);
+  let daysPassed = Math.round((new Date() - sprintStartDate) / (1000 * 60 * 60 * 24));
+  daysPassed = daysPassed - Math.floor(daysPassed * 2 / 7);
+  const daysRemaining = workDaysInSprint - daysPassed;
 
   for (let [assignee, issues] of Object.entries(issuesByAssignee)) {
     let totalDaysInProgress = 0;
