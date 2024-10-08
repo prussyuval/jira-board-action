@@ -39,18 +39,21 @@ function formatMessage(assigneeDisplayName, statusMap, totalDaysInProgress, tota
 function getRemainingDays(issue) {
   let issueFields = issue.fields;
 
-  if (issueFields.aggregatetimeoriginalestimate !== null) {
+  let timeTrackingDays = issueFields.timetracking;
+
+  if (timeTrackingDays.remainingEstimateSeconds !== null && timeTrackingDays.remainingEstimateSeconds !== undefined) {
+    return timeTrackingDays.remainingEstimateSeconds / 3600 / 8;
+  }
+
+  if (timeTrackingDays.originalEstimateSeconds !== null && timeTrackingDays.originalEstimateSeconds !== undefined) {
+    return timeTrackingDays.originalEstimateSeconds / 3600 / 8;
+  }
+
+  if (issueFields.aggregatetimeoriginalestimate !== null && issueFields.aggregatetimeoriginalestimate !== undefined) {
      return issueFields.aggregatetimeoriginalestimate / 3600 / 8;
   }
 
-  let timeTrackingDays = issueFields.timetracking;
-
-  let estimationDays = timeTrackingDays.originalEstimateSeconds / 3600 / 8;
-
-  if (timeTrackingDays.remainingEstimateSeconds === undefined) {
-    return estimationDays;
-  }
-  return timeTrackingDays.remainingEstimateSeconds / 3600 / 8;
+  return timeTrackingDays.aggregatetimeoriginalestimate / 3600 / 8;
 }
 
 function getCurrentDate() {
