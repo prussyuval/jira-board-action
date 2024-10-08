@@ -41,15 +41,15 @@ function getRemainingDays(issue) {
 
   let timeTrackingDays = issueFields.timetracking;
 
-  if (timeTrackingDays.remainingEstimateSeconds !== null && timeTrackingDays.remainingEstimateSeconds !== undefined) {
+  if (timeTrackingDays.remainingEstimateSeconds !== null && timeTrackingDays.remainingEstimateSeconds !== undefined && timeTrackingDays.remainingEstimateSeconds !== 0) {
     return timeTrackingDays.remainingEstimateSeconds / 3600 / 8;
   }
 
-  if (timeTrackingDays.originalEstimateSeconds !== null && timeTrackingDays.originalEstimateSeconds !== undefined) {
+  if (timeTrackingDays.originalEstimateSeconds !== null && timeTrackingDays.originalEstimateSeconds !== undefined && timeTrackingDays.originalEstimateSeconds !== 0) {
     return timeTrackingDays.originalEstimateSeconds / 3600 / 8;
   }
 
-  if (issueFields.aggregatetimeoriginalestimate !== null && issueFields.aggregatetimeoriginalestimate !== undefined) {
+  if (issueFields.aggregatetimeoriginalestimate !== null && issueFields.aggregatetimeoriginalestimate !== undefined && issueFields.aggregatetimeoriginalestimate !== 0) {
      return issueFields.aggregatetimeoriginalestimate / 3600 / 8;
   }
 
